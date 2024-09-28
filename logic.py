@@ -12,6 +12,7 @@ class Pokemon:
         self.img = self.get_img()
         self.name = self.get_name()
         self.ability = self.get_abilities()
+        self.item = self.get_items()
         Pokemon.pokemons[pokemon_trainer] = self
 
     # Метод для получения картинки покемона через API
@@ -45,6 +46,19 @@ class Pokemon:
             return (data['forms'][0]['name'])
         else:
             return "Pikachu"
+        
+    def get_items(self):
+        url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            if self.pokemon_number == 1000:
+                data['held_items'].append('legendary sword')
+            else:
+                data['held_items'].append('apple')
+            return (data['held_items'])
+        else:
+            return "Pikachu"
 
 
     # Метод класса для получения информации
@@ -57,6 +71,8 @@ class Pokemon:
     
     def abilities(self):
         return f'способности твоего покемона: {self.ability[0]},{self.ability[1]}'
+    def items(self):
+        return f'Предметы у твоего покемона: {self.item[0]}'
 
 
 
