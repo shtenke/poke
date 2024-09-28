@@ -29,7 +29,10 @@ class Pokemon:
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            return (data['abilities']['ability'])
+            ability_list = []
+            for i in data['abilities']:
+                ability_list.append(i['ability']['name'])
+            return ability_list
         else:
             return "Pikachu"
     
@@ -53,7 +56,7 @@ class Pokemon:
         return self.img
     
     def abilities(self):
-        return self.ability
+        return f'способности твоего покемона: {self.ability[0]},{self.ability[1]}'
 
 
 
