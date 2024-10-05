@@ -3,7 +3,6 @@ import requests
 
 class Pokemon:
     pokemons = {}
-    # Инициализация объекта (конструктор)
     def __init__(self, pokemon_trainer):
 
         self.pokemon_trainer = pokemon_trainer   
@@ -13,9 +12,14 @@ class Pokemon:
         self.name = self.get_name()
         self.ability = self.get_abilities()
         self.item = self.get_items()
+        self.hp = randint(10,31)
+        self.power = randint(1,9)
         Pokemon.pokemons[pokemon_trainer] = self
 
-    # Метод для получения картинки покемона через API
+
+
+
+
     def get_img(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         response = requests.get(url)
@@ -25,6 +29,10 @@ class Pokemon:
         else:
             return "Pikachu"
         
+
+
+
+
     def get_abilities(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         response = requests.get(url)
@@ -36,8 +44,11 @@ class Pokemon:
             return ability_list
         else:
             return "Pikachu"
+        
+
+
+
     
-    # Метод для получения имени покемона через API
     def get_name(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         response = requests.get(url)
@@ -47,32 +58,82 @@ class Pokemon:
         else:
             return "Pikachu"
         
+
+
+
     def get_items(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            if self.pokemon_number == 1000:
-                data['held_items'].append('legendary sword')
-            else:
-                data['held_items'].append('apple')
+            for i in data['held_items']:
+                data['held_items'].extend(i)
+            data['held_items'].append('apple')
             return (data['held_items'])
         else:
             return "Pikachu"
+        
 
 
-    # Метод класса для получения информации
+
+    def attack(self, enemy):
+        if self.hp <= 0:
+            return "Вы уже проиграли!"
+
+        enemy.hp -= self.power
+        if enemy.hp <= 0:
+            Pokemon.pokemons.pop(enemy.pokemon_trainer)
+            return "Враг проиграл"
+        else:
+            return f"Враг атакован, hp врага: {enemy.hp}"
+    
+    def heal(self):
+        if 'apple' in self.item:
+            self.item.remove('apple')
+            self.hp += 20
+            return f'вы съели apple и восстановили здоровье на 20'
+        else:
+            return f'У вас уже нет apple'
+            
+
+
+
+
+
     def info(self):
         return f"Имя твоего покемона: {self.name}"
 
-    # Метод класса для получения картинки покемона
+        # Метод класса для получения картинки покемона
     def show_img(self):
         return self.img
-    
+        
     def abilities(self):
         return f'способности твоего покемона: {self.ability[0]},{self.ability[1]}'
     def items(self):
-        return f'Предметы у твоего покемона: {self.item[0]}'
+        if len(self.item) == 0:
+            return f'У вас нету предметов'
+        else:
+            return f'Предметы у твоего покемона: {self.item[0]}'
 
 
+
+
+
+class Pokemon_fighter(Pokemon):
+    def __init__(self, pokemon_trainer):
+        self.pokemon_trainer = pokemon_trainer   
+
+        self.pokemon_number = randint(1,1000)
+        self.img = self.get_img()
+        self.name = self.get_name()
+        self.ability = self.get_abilities()
+        self.item = self.get_items()
+        self.hp = randint(10,21)
+        self.power = randint(5,14)
+        Pokemon.pokemons[pokemon_trainer] = self
+
+
+    def info(self):
+        return f"Имя твоего покемона воина: {self.name}"
+    
 
