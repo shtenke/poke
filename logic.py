@@ -105,7 +105,8 @@ class Pokemon:
             self.last_feed_time = current_time
             return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
         else:
-            return f"Следующее время кормления покемона: {self.last_feed_time+delta_time}"  
+            time = datetime.fromtimestamp((self.last_feed_time+delta_time).timestamp() - current_time.timestamp())
+            return f"Следующее время кормления покемона через {time.second}"  
             
 
 
@@ -148,5 +149,8 @@ class Pokemon_fighter(Pokemon):
 
     def info(self):
         return f"Имя твоего покемона воина: {self.name}"
+    
+    def feed(self):
+        return super().feed(feed_interval=30,hp_increase=20)
     
 
