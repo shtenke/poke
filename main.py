@@ -2,6 +2,7 @@ import telebot
 from config import token
 import random
 from logic import Pokemon, Pokemon_fighter
+from datetime import datetime, timedelta
 
 bot = telebot.TeleBot(token) 
 
@@ -39,6 +40,11 @@ def attack(message):
         bot.send_message(message.chat.id, my_pokemon.attack(enemy_pokemon))
     else:
         bot.send_message(message.chat.id, "Команду /attack нужно писать в ответ на сообщение человека, которого вы хотите атаковать")
+@bot.message_handler(commands=['feed'])
+def feed(message):
+    my_username = message.from_user.username
+    my_pokemon = Pokemon.pokemons[my_username]
+    bot.send_message(message.chat.id, my_pokemon.feed())
 @bot.message_handler(commands=['heal'])
 def heal(message):
     my_username = message.from_user.username
